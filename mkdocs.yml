@@ -1,0 +1,73 @@
+site_name: Tilt Integration Documentation
+site_description: Documentation for third-party developers integrating with Tilt
+site_author: Tilt Team
+site_url: https://tilt-energy.github.io/integration-documentation/
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - search.share
+    - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+repo_name: tilt-energy/integration_documentation
+repo_url: https://github.com/tilt-energy/integration_documentation
+edit_uri: edit/main/docs/
+
+plugins:
+  - search
+  - redoc-tag
+
+nav:
+  - Home: index.md
+  - Core Concepts:
+    - Terminology: concepts/terminology.md
+  - Integration Journey:
+    - Overview: integration/overview.md
+    - Discovery: integration/discovery.md
+    - API Implementation: integration/implementation.md
+    - Validation: integration/validation.md
+    - Tilt Integration: integration/tilt_integration.md
+    - Production Deployment: integration/production.md
+    - Monitoring & Maintenance: integration/monitoring.md
+  - API Reference:
+    - Overview: api/overview.md
+    - Reference: api/reference.md
+    - Authentication: api/authentication.md
+    - Action Scheduling: api/action_scheduling.md
+    - Document your system: api/documentation.md
+
+markdown_extensions:
+  - admonition  # For callouts, notes, and warnings
+  - codehilite  # For syntax highlighting
+  - toc:        # For table of contents
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist     # For checkboxes in task lists
+  - attr_list             # For adding attributes to elements
+  - md_in_html            # For using HTML in markdown
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js

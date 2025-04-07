@@ -1,0 +1,1212 @@
+openapi: 3.0.0
+info:
+  title: Tilt Integration API
+  description: API for third-party integration with Tilt's platform
+  version: 1.0.0
+  contact:
+    name: Tilt Integration Support
+    email: integration-support@tilt-energy.com
+
+servers:
+  - url: https://api.tilt-energy.com/v1
+    description: Production server
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.tilt-energy.com/oauth/authorize
+          tokenUrl: https://api.tilt-energy.com/oauth/token
+          scopes:
+            sites:read: Read site information
+            sites:write: Write site information
+            devices:read: Read device information
+            devices:write: Write device information
+            values:read: Read device values
+            values:write: Write device values
+  schemas:
+    Error:
+      type: object
+      properties:
+        error_key:
+          type: string
+          description: Machine-readable error code
+          example: "invalid_request"
+        error_message:
+          type: string
+          description: Human-readable error message
+          example: "Invalid request parameters"
+        error_details:
+          type: object
+          description: Additional error details
+          example:
+            field: "client_id"
+            reason: "missing"
+      required:
+        - error_key
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the site
+        name:
+          type: string
+          description: Name of the site
+          example: "Hôtel-Dieu"
+        address:
+          $ref: '#/components/schemas/Address'
+          description: Physical address of the site, conforming to ISO 19160-4:2017 Geographic information — Addressing
+        pdl_identifier:
+          type: string
+          pattern: '^\d{14}$'
+          description: PDL, 14-digit identifier of the electricity meter at the site. 
+            This allows us to reconcile your building with its consumption data.
+          example: "12345678901234"
+      required:
+        - id
+        - name
+        - address
+    DeviceField:
+      type: object
+      properties:
+        field_name:
+          type: string
+          description: Name of the field
+        data_type:
+          type: string
+          enum: [string, number, boolean, datetime]
+          description: Data type of the field
+        writable:
+          type: boolean
+          description: Whether the field can be written to
+      required:
+        - field_name
+        - data_type
+        - writable
+    Device:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the device
+        site_id:
+          type: string
+          format: uuid
+          description: ID of the site this device belongs to
+        device_type:
+          type: string
+          description: Type of device (third-party specific)
+        status:
+          type: string
+          enum: [CONNECTED, DISCONNECTED, NOT_AVAILABLE, RETIRED]
+          description: Current status of the device
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags associated with the device
+          example: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
+      required:
+        - device_id
+        - site_id
+        - device_type
+        - status
+        - tags
+    PaginatedSites:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of sites
+          example: 213
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/sites?page=2&page_size=100"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+          example:
+            - id: "550e8400-e29b-41d4-a716-446655440000"
+              name: "Hôtel-Dieu"
+              address:
+                country: "FR"
+                administrative_area: "Île-de-France"
+                locality: "Paris"
+                thoroughfare: "Parvis Notre-Dame - Pl. Jean-Paul II"
+                premise_number: "1"
+                postal_code: "75004"
+                additional_information: "Service flexibilité électrique"
+              pdl_identifier: "12345678901234"
+            - id: "550e8400-e29b-41d4-a716-446655440001"
+              name: "Ministère de la transition écologique"
+              address:
+                country: "FR"
+                administrative_area: "Île-de-France"
+                locality: "Paris"
+                thoroughfare: "Boulevard Saint-Germain"
+                premise_number: "246"
+                postal_code: "75007"
+                additional_information: "Ministère de la transition écologique"
+              pdl_identifier: "98765432101234"
+      required:
+        - count
+        - results
+    PaginatedDevices:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of devices
+          example: 2500
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/devices?page=2&page_size=100"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+          example:
+            - device_id: "550e8400-e29b-41d4-a716-446655440000"
+              site_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_type: "HEAT-PUMP"
+              status: "CONNECTED"
+              tags: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
+            - device_id: "550e8400-e29b-41d4-a716-446655440001"
+              site_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_type: "TEMPERATURE-SENSOR"
+              status: "CONNECTED"
+              tags: ["1ST_FLOOR_OFFICES"]
+      required:
+        - count
+        - results
+    WriteAction:
+      type: object
+      properties:
+        action_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the write action
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device to write to
+        field_name:
+          type: string
+          description: Name of the field to write
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: Value to write to the field
+        start_timestamp:
+          type: string
+          format: date-time
+          description: Start time for the action in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+          example: "2024-04-08T10:00:00Z"
+        end_timestamp:
+          type: string
+          format: date-time
+          description: End time for the action in ISO 8601 format with timezone (e.g. "2024-04-08T11:00:00Z" or "2024-04-08T11:00:00+02:00")
+          example: "2024-04-08T11:00:00Z"
+      required:
+        - action_id
+        - device_id
+        - field_name
+        - value
+        - start_timestamp
+        - end_timestamp
+    WriteActionResult:
+      type: object
+      properties:
+        action_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the write action
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device to write to
+        field_name:
+          type: string
+          description: Name of the field to write
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: Value to write to the field
+        start_timestamp:
+          type: string
+          format: date-time
+          description: Start time for the action in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+          example: "2024-04-08T10:00:00Z"
+        end_timestamp:
+          type: string
+          format: date-time
+          description: End time for the action in ISO 8601 format with timezone (e.g. "2024-04-08T11:00:00Z" or "2024-04-08T11:00:00+02:00")
+          example: "2024-04-08T11:00:00Z"
+        status:
+          type: string
+          enum: [PLANNED, NEW_VALUE_SET, OLD_VALUE_RESTORED, FAILED]
+          description: Status of the write action
+        error:
+          type: object
+          properties:
+            error_key:
+              type: string
+              description: Machine-readable error code
+              example: "field_not_writable"
+            error_message:
+              type: string
+              description: Human-readable error message
+              example: "Field is not writable"
+            error_details:
+              type: object
+              description: Additional error details
+              example:
+                field_name: "FEEDBACK-TEMPERATURE"
+                reason: "read_only"
+          required:
+            - error_key
+      required:
+        - action_id
+        - device_id
+        - field_name
+        - value
+        - start_timestamp
+        - end_timestamp
+        - status
+    WriteActionsRequest:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/WriteAction'
+          description: List of write actions to execute
+          example:
+            - action_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "TARGET-TEMPERATURE"
+              value: 17
+              start_timestamp: "2024-04-08T10:00:00Z"
+              end_timestamp: "2024-04-08T11:00:00Z"
+            - action_id: "550e8400-e29b-41d4-a716-446655440001"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "FEEDBACK-TEMPERATURE"
+              value: 17
+              start_timestamp: "2024-04-08T10:00:00Z"
+              end_timestamp: "2024-04-08T11:00:00Z"
+      required:
+        - actions
+    WriteActionsResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WriteActionResult'
+          description: List of write actions taken into account with their status
+          example:
+            - action_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "TARGET-TEMPERATURE"
+              value: 17
+              start_timestamp: "2024-04-08T10:00:00Z"
+              end_timestamp: "2024-04-08T11:00:00Z"
+              status: "PLANNED"
+            - action_id: "550e8400-e29b-41d4-a716-446655440001"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "FEEDBACK-TEMPERATURE"
+              value: 17
+              start_timestamp: "2024-04-08T10:00:00Z"
+              end_timestamp: "2024-04-08T11:00:00Z"
+              status: "FAILED"
+              error:
+                error_key: "field_not_writable"
+                error_message: "Field is not writable"
+                error_details:
+                  field_name: "FEEDBACK-TEMPERATURE"
+                  reason: "read_only"
+      required:
+        - results
+    LatestValue:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device
+        field_name:
+          type: string
+          description: Name of the field
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - type: null
+          description: Latest value of the field
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the value in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+      required:
+        - device_id
+        - field_name
+        - value
+        - timestamp
+    PaginatedLatestValues:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of values
+          example: 405
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/latest_value?page=2&page_size=100&field_name=HEATING-MODE"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LatestValue'
+          example:
+            - device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "HEATING-MODE"
+              value: "COMFORT"
+              timestamp: "2024-01-12T00:00:00Z"
+            - device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "HEATING-MODE"
+              value: "FROST-PROTECTION"
+              timestamp: "2024-04-08T10:00:00Z"
+            - device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "HEATING-MODE"
+              value: "COMFORT"
+              timestamp: "2024-04-07T10:00:00Z"
+      required:
+        - count
+        - results
+    TimeSeries:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device
+        field_name:
+          type: string
+          description: Name of the field
+        values:
+          type: array
+          items:
+            type: array
+            items:
+              - type: string
+                format: date-time
+                description: value acquisition timestamp in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+                example: "2024-04-08T10:00:00Z"
+              - oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+            minItems: 2
+            maxItems: 2
+          description: Array of [timestamp, value] pairs
+      required:
+        - device_id
+        - field_name
+        - values
+    PaginatedTimeSeries:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of values across all time series
+          example: 11200
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeries'
+          description: Time series (list of [timestamp, value] pairs). 
+            A time series for a given device and field might be split across multiple pages due to pagination being based on the total number of values.
+      required:
+        - count
+        - results
+      example:
+        count: 11200
+        next: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE"
+        results:
+          - device_id: "550e8400-e29b-41d4-a716-446655440000"
+            field_name: "TARGET-TEMPERATURE"
+            values:
+              - ["2024-03-08T07:00:00Z", 22]
+              - ["2024-04-08T08:00:00Z", 17]
+              - ["2024-04-08T09:00:00Z", 22]
+    Address:
+      type: object
+      description: Address conforming to ISO 19160-4:2017 Geographic information — Addressing
+      properties:
+        country:
+          type: string
+          description: Country name or code (ISO 3166-1 alpha-2)
+          example: "FR"
+        administrative_area:
+          type: string
+          description: First-level administrative division (e.g. state, province, region)
+          example: "Île-de-France"
+        locality:
+          type: string
+          description: City or town name
+          example: "Paris"
+        thoroughfare:
+          type: string
+          description: Street name
+          example: "Parvis Notre-Dame - Pl. Jean-Paul II"
+        premise_number:
+          type: string
+          description: Building or house number
+          example: "1"
+        postal_code:
+          type: string
+          description: Postal code
+          example: "75004"
+        additional_information:
+          type: string
+          description: Additional address information (e.g. floor, apartment number)
+          example: "Service flexibilité électrique"
+      required:
+        - country
+        - locality
+        - thoroughfare
+        - premise_number
+        - postal_code
+    DeviceType:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the device type
+          example: "HVAC"
+        description:
+          type: string
+          description: Description of the device type
+          example: "Heating, Ventilation, and Air Conditioning system"
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+          description: List of fields available for this device type
+      required:
+        - name
+        - description
+        - fields
+    Field:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the field
+          example: "HEATING-MODE"
+        description:
+          type: string
+          description: Description of the field
+          example: "Current heating mode of the device"
+        type:
+          type: string
+          enum: [string, number, boolean]
+          description: Data type of the field
+          example: "string"
+        unit:
+          type: string
+          description: Unit of measurement for numeric fields
+          example: "°C"
+        min:
+          type: number
+          description: Minimum value for numeric fields
+          example: 5
+        max:
+          type: number
+          description: Maximum value for numeric fields
+          example: 30
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: Possible value for the field
+                example: "COMFORT"
+              description:
+                type: string
+                description: Description of the value
+                example: "Standard comfort heating mode"
+          description: List of possible values for string fields
+      required:
+        - name
+        - description
+        - type
+    PaginatedDeviceTypes:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of device types
+          example: 2
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/device_types?page=2&page_size=100"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceType'
+          example:
+            - name: "HVAC"
+              description: "Heating, Ventilation, and Air Conditioning system"
+              fields:
+                - name: "HEATING-MODE"
+                  description: "Current heating mode of the device"
+                  type: "string"
+                  values:
+                    - value: "COMFORT"
+                      description: "Standard comfort heating mode"
+                    - value: "ECO"
+                      description: "Energy-saving heating mode"
+                    - value: "FROST_PROTECTION"
+                      description: "Minimum heating to prevent freezing"
+                - name: "TARGET-TEMPERATURE"
+                  description: "Desired temperature setpoint"
+                  type: "number"
+                  unit: "°C"
+                  min: 5
+                  max: 30
+            - name: "THERMOSTAT"
+              description: "Smart thermostat device"
+              fields:
+                - name: "TARGET-TEMPERATURE"
+                  description: "Desired temperature setpoint"
+                  type: "number"
+                  unit: "°C"
+                  min: 5
+                  max: 30
+                - name: "FEEDBACK-TEMPERATURE"
+                  description: "Current measured temperature"
+                  type: "number"
+                  unit: "°C"
+      required:
+        - count
+        - results
+
+paths:
+  /oauth/token:
+    post:
+      summary: Get OAuth2 access token
+      description: Obtain an access token using client credentials flow
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+                  default: client_credentials
+                client_id:
+                  type: string
+                  description: Your client ID
+                client_secret:
+                  type: string
+                  description: Your client secret
+                scope:
+                  type: string
+                  description: Space-separated list of requested scopes
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+      responses:
+        '200':
+          description: Successful token request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The access token
+                  token_type:
+                    type: string
+                    enum: [Bearer]
+                    default: Bearer
+                  expiration_timestamp:
+                    type: string
+                    format: date-time
+                    description: Token expiration time in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+                    example: "2024-04-08T10:00:00Z"
+                  scope:
+                    type: string
+                    description: Granted scopes
+                required:
+                  - access_token
+                  - token_type
+                  - expiration_timestamp
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sites:
+    get:
+      summary: List all sites
+      description: Retrieve a paginated list of all sites accessible to the authenticated user
+      operationId: getSites
+      security:
+        - OAuth2: [sites:read]
+      parameters:
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSites'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /device_types:
+    get:
+      summary: List device types
+      description: Retrieve a list of all device types with their fields
+      operationId: listDeviceTypes
+      security:
+        - OAuth2: [devices:read]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceType'
+                example:
+                  - name: "HVAC"
+                    description: "Heating, Ventilation, and Air Conditioning system"
+                    fields:
+                      - name: "HEATING-MODE"
+                        description: "Current heating mode of the device"
+                        type: "string"
+                        values:
+                          - value: "COMFORT"
+                            description: "Standard comfort heating mode"
+                          - value: "ECO"
+                            description: "Energy-saving heating mode"
+                          - value: "FROST_PROTECTION"
+                            description: "Minimum heating to prevent freezing"
+                      - name: "TARGET-TEMPERATURE"
+                        description: "Desired temperature setpoint"
+                        type: "number"
+                        unit: "°C"
+                        min: 5
+                        max: 30
+                  - name: "THERMOSTAT"
+                    description: "Smart thermostat device"
+                    fields:
+                      - name: "TARGET-TEMPERATURE"
+                        description: "Desired temperature setpoint"
+                        type: "number"
+                        unit: "°C"
+                        min: 5
+                        max: 30
+                      - name: "FEEDBACK-TEMPERATURE"
+                        description: "Current measured temperature"
+                        type: "number"
+                        unit: "°C"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /devices:
+    get:
+      summary: List all devices
+      description: Retrieve a paginated list of all devices accessible to the authenticated user
+      operationId: getDevices
+      security:
+        - OAuth2: [devices:read]
+      parameters:
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+        - name: device_type
+          in: query
+          description: Filter devices by type(s). Multiple values can be provided as comma-separated list.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: status
+          in: query
+          description: Filter devices by status
+          required: false
+          schema:
+            type: string
+            enum: [CONNECTED, DISCONNECTED, NOT_AVAILABLE, RETIRED]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDevices'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /write_actions:
+    post:
+      summary: Execute write actions
+      description: Execute a batch of write actions on devices
+      operationId: writeActions
+      security:
+        - OAuth2: [values:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteActionsRequest'
+      responses:
+        '200':
+          description: Write actions executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteActionsResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: List write actions
+      description: Retrieve a paginated list of write actions with optional filtering
+      operationId: listWriteActions
+      security:
+        - OAuth2: [values:write]
+      parameters:
+        - name: page
+          in: query
+          description: Page number to retrieve
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+        - name: device_id
+          in: query
+          description: Filter by device ID(s). Multiple values can be provided as comma-separated list.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+        - name: field_name
+          in: query
+          description: Filter by field name(s). Multiple values can be provided as comma-separated list.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: status
+          in: query
+          description: Filter by status(es). Multiple values can be provided as comma-separated list.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [PLANNED, NEW_VALUE_SET, OLD_VALUE_RESTORED, FAILED]
+        - name: starts_after
+          in: query
+          description: Filter actions that start after this timestamp in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-04-08T10:00:00Z"
+        - name: action_id
+          in: query
+          description: Filter by action ID(s). Multiple values can be provided as comma-separated list.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Total number of write actions
+                    example: 2
+                  next:
+                    type: string
+                    format: uri
+                    description: URL for the next page of results
+                    example: null
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WriteActionResult'
+                    description: List of matching write actions
+                    example:
+                      - action_id: "550e8400-e29b-41d4-a716-446655440000"
+                        device_id: "550e8400-e29b-41d4-a716-446655440000"
+                        field_name: "TARGET-TEMPERATURE"
+                        value: 17
+                        start_timestamp: "2024-04-08T10:00:00Z"
+                        end_timestamp: "2024-04-08T11:00:00Z"
+                        status: "NEW_VALUE_SET"
+                      - action_id: "550e8400-e29b-41d4-a716-446655440001"
+                        device_id: "550e8400-e29b-41d4-a716-446655440000"
+                        field_name: "FEEDBACK-TEMPERATURE"
+                        value: 17
+                        start_timestamp: "2024-04-08T10:00:00Z"
+                        end_timestamp: "2024-04-08T11:00:00Z"
+                        status: "FAILED"
+                        error:
+                          error_key: "field_not_writable"
+                          error_message: "Field is not writable"
+                          error_details:
+                            field_name: "FEEDBACK-TEMPERATURE"
+                            reason: "read_only"
+                required:
+                  - count
+                  - results
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /latest_value:
+    get:
+      summary: Get latest values for devices and fields
+      description: Retrieve the latest values for specified devices and fields
+      security:
+        - OAuth2: [values:read]
+      parameters:
+        - name: device_id
+          in: query
+          description: Filter by device IDs
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          style: form
+          explode: false
+        - name: field_name
+          in: query
+          description: Filter by field names
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLatestValues'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /history:
+    get:
+      summary: Get historical values for devices and fields
+      description: Retrieve time series data for specified devices and fields. 
+        Pagination is based on the total number of values, which means a time series for a given device and field might be split across multiple pages.
+      security:
+        - OAuth2: [values:read]
+      parameters:
+        - name: device_id
+          in: query
+          description: Filter by device IDs
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          style: form
+          explode: false
+        - name: field_name
+          in: query
+          description: Filter by field names
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+        - name: start_timestamp
+          in: query
+          description: Filter values that occur after this timestamp in ISO 8601 format with timezone (e.g. "2024-04-08T10:00:00Z" or "2024-04-08T10:00:00+02:00")
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-04-08T10:00:00Z"
+        - name: end_timestamp
+          in: query
+          description: Filter values that occur before this timestamp in ISO 8601 format with timezone (e.g. "2024-04-08T11:00:00Z" or "2024-04-08T11:00:00+02:00")
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2024-04-08T11:00:00Z"
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of values per page
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTimeSeries'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
