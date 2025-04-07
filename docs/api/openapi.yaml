@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+  title: Tilt Integration API
+  description: API for third-party integration with Tilt's platform
+  version: 1.0.0
+  contact:
+    name: Tilt Integration Support
+    email: integration-support@tilt-energy.com
+
+servers:
+  - url: https://api.tilt-energy.com/v1
+    description: Production server
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.tilt-energy.com/v1/oauth/token
+          scopes:
+            sites:read: "Read access to sites"
+            sites:write: "Write access to sites"
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      required:
+        - code
+        - message
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the site
+        name:
+          type: string
+          description: Name of the site
+        address:
+          type: string
+          description: Physical address of the site
+        timezone:
+          type: string
+          description: Timezone of the site
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+        - id
+        - name
+        - address
+        - timezone
+        - created_at
+        - updated_at
+    SitesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Site'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Total number of sites
+            page:
+              type: integer
+              description: Current page number
+            per_page:
+              type: integer
+              description: Number of items per page
+      required:
+        - data
+        - meta
+
+paths:
+  /oauth/token:
+    post:
+      summary: Get OAuth2 access token
+      description: Obtain an access token using client credentials flow
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum: [client_credentials]
+                  default: client_credentials
+                client_id:
+                  type: string
+                  description: Your client ID
+                client_secret:
+                  type: string
+                  description: Your client secret
+                scope:
+                  type: string
+                  description: Space-separated list of requested scopes
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+      responses:
+        '200':
+          description: Successful token request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The access token
+                  token_type:
+                    type: string
+                    enum: [Bearer]
+                    default: Bearer
+                  expires_in:
+                    type: integer
+                    description: Token expiration time in seconds
+                  scope:
+                    type: string
+                    description: Granted scopes
+                required:
+                  - access_token
+                  - token_type
+                  - expires_in
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sites:
+    get:
+      summary: List sites
+      description: Retrieve a list of sites accessible to the authenticated client
+      tags:
+        - Sites
+      security:
+        - OAuth2: [sites:read]
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SitesResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
