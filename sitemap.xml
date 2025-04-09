@@ -1,3 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/contributing/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/api/action_scheduling/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/api/authentication/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/api/overview/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/api/reference/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/api/validation/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
+    <url>
+         <loc>https://tilt-energy.github.io/integration-documentation/concepts/terminology/</loc>
+         <lastmod>2025-04-09</lastmod>
+    </url>
 </urlset>

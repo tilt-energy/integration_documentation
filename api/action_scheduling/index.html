@@ -7,24 +7,25 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Documentation for third-party developers integrating with Tilt" name="description"/>
 <meta content="Tilt Team" name="author"/>
-<link href="https://tilt-energy.github.io/integration-documentation/" rel="canonical"/>
-<link href="concepts/terminology/" rel="next"/>
-<link href="assets/images/favicon.png" rel="icon"/>
+<link href="https://tilt-energy.github.io/integration-documentation/api/action_scheduling/" rel="canonical"/>
+<link href="../authentication/" rel="prev"/>
+<link href="../validation/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.11" name="generator"/>
-<title>Overview - Tilt Integration Documentation</title>
-<link href="assets/stylesheets/main.4af4bdda.min.css" rel="stylesheet"/>
-<link href="assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<title>Action Scheduling - Tilt Integration Documentation</title>
+<link href="../../assets/stylesheets/main.4af4bdda.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
-<script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 </head>
 <body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#welcome-to-tilt-integration-documentation">
+<a class="md-skip" href="#action-scheduling">
           Skip to content
         </a>
 </div>
@@ -32,7 +33,7 @@
 </div>
 <header class="md-header" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="Tilt Integration Documentation" class="md-header__button md-logo" data-md-component="logo" href="." title="Tilt Integration Documentation">
+<a aria-label="Tilt Integration Documentation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Tilt Integration Documentation">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
 <label class="md-header__button md-icon" for="__drawer">
@@ -48,7 +49,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Overview
+              Action Scheduling
             
           </span>
 </div>
@@ -115,8 +116,8 @@
 <nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
 <div class="md-grid">
 <ul class="md-tabs__list">
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href=".">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../..">
           
   
   
@@ -125,7 +126,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="concepts/terminology/">
+<a class="md-tabs__link" href="../../concepts/terminology/">
           
   
   
@@ -133,8 +134,8 @@
 
         </a>
 </li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="api/overview/">
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../overview/">
           
   
   
@@ -143,7 +144,7 @@
         </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="contributing/">
+<a class="md-tabs__link" href="../../contributing/">
           
   
   
@@ -161,7 +162,7 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="Tilt Integration Documentation" class="md-nav__button md-logo" data-md-component="logo" href="." title="Tilt Integration Documentation">
+<a aria-label="Tilt Integration Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Tilt Integration Documentation">
 <svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
 </a>
     Tilt Integration Documentation
@@ -177,65 +178,28 @@
 </a>
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
 <span class="md-ellipsis">
     Introduction
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_1">
 <span class="md-nav__icon md-icon"></span>
             Introduction
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    Overview
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href=".">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../..">
 <span class="md-ellipsis">
     Overview
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#quick-start">
-<span class="md-ellipsis">
-      Quick Start
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#need-help">
-<span class="md-ellipsis">
-      Need Help?
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#contributing">
-<span class="md-ellipsis">
-      Contributing
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 </ul>
 </nav>
@@ -256,7 +220,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="concepts/terminology/">
+<a class="md-nav__link" href="../../concepts/terminology/">
 <span class="md-ellipsis">
     Terminology
     
@@ -266,23 +230,23 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
 <span class="md-ellipsis">
     API Specification
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_3">
 <span class="md-nav__icon md-icon"></span>
             API Specification
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="api/overview/">
+<a class="md-nav__link" href="../overview/">
 <span class="md-ellipsis">
     Overview
     
@@ -290,7 +254,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="api/reference/">
+<a class="md-nav__link" href="../reference/">
 <span class="md-ellipsis">
     Reference
     
@@ -298,23 +262,81 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="api/authentication/">
+<a class="md-nav__link" href="../authentication/">
 <span class="md-ellipsis">
     Authentication
     
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="api/action_scheduling/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Action Scheduling
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     Action Scheduling
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#action-states">
+<span class="md-ellipsis">
+      Action States
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="api/validation/">
+<a class="md-nav__link" href="#lifecycle-sequence">
+<span class="md-ellipsis">
+      Lifecycle Sequence
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#state-transitions">
+<span class="md-ellipsis">
+      State Transitions
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#status-monitoring">
+<span class="md-ellipsis">
+      Status Monitoring
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-implementation">
+<span class="md-ellipsis">
+      Example Implementation
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      Error Handling
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../validation/">
 <span class="md-ellipsis">
     Validation
     
@@ -340,7 +362,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="contributing/">
+<a class="md-nav__link" href="../../contributing/">
 <span class="md-ellipsis">
     Contributing
     
@@ -357,18 +379,99 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="welcome-to-tilt-integration-documentation">Welcome to Tilt Integration Documentation<a class="headerlink" href="#welcome-to-tilt-integration-documentation" title="Permanent link">¶</a></h1>
-<p>This documentation is designed to help third-party developers integrate their Building Management Systems with Tilt's platform. Whether you're building a new integration or enhancing an existing one, this guide will help you understand our platform and implement a successful integration.</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¶</a></h2>
+<h1 id="action-scheduling">Action Scheduling<a class="headerlink" href="#action-scheduling" title="Permanent link">¶</a></h1>
+<p>This section describes how write actions should be handled in your API. When Tilt sends write actions to your API, they should be executed according to a specific schedule defined by start and end timestamps.</p>
+<h2 id="action-states">Action States<a class="headerlink" href="#action-states" title="Permanent link">¶</a></h2>
+<p>A write action in your API should support the following states:</p>
+<ul>
+<li><strong>PLANNED</strong>: The action has been accepted and is scheduled for execution</li>
+<li><strong>NEW_VALUE_SET</strong>: The action has started and the new value has been applied</li>
+<li><strong>OLD_VALUE_RESTORED</strong>: The action has completed and the original value has been restored</li>
+<li><strong>FAILED</strong>: The action failed at some point in its lifecycle</li>
+</ul>
+<h2 id="lifecycle-sequence">Lifecycle Sequence<a class="headerlink" href="#lifecycle-sequence" title="Permanent link">¶</a></h2>
+<p>The following diagram shows how Tilt will interact with your API for write actions:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Tilt as Tilt Client
+    participant API as Your API
+    participant Device as Your Device
+
+    Tilt-&gt;&gt;API: POST /write_actions
+    API--&gt;&gt;Tilt: Status: PLANNED
+
+    Note over API,Device: Wait until start_timestamp
+
+    API-&gt;&gt;Device: Set new value
+    API--&gt;&gt;Tilt: Status: NEW_VALUE_SET (on next GET)
+
+    Note over API,Device: Wait until end_timestamp
+
+    API-&gt;&gt;Device: Restore old value
+    API--&gt;&gt;Tilt: Status: OLD_VALUE_RESTORED (on next GET)</code></pre>
+<h2 id="state-transitions">State Transitions<a class="headerlink" href="#state-transitions" title="Permanent link">¶</a></h2>
+<p>Your API should implement the following state transitions:</p>
 <ol>
-<li><a href="concepts/terminology/">Core Concepts</a> - Understand Tilt's terminology</li>
-<li><a href="api/overview/">API Specification</a> - Learn about our API requirements</li>
-<li><a href="api/validation/">Validation</a> - A test suite to validate your API readiness for integration</li>
+<li>
+<p>When Tilt submits a write action via POST <code>/write_actions</code>, your API should:</p>
+<ul>
+<li>Validate the request, or return a response with status <code>FAILED</code></li>
+<li>Store the action</li>
+<li>Return a response with status <code>PLANNED</code></li>
+</ul>
+</li>
+<li>
+<p>At the <code>start_timestamp</code>, your API should:</p>
+<ul>
+<li>Attempt to apply the new value to the device</li>
+<li>If successful, update the status to <code>NEW_VALUE_SET</code></li>
+<li>If it fails, update the status to <code>FAILED</code></li>
+</ul>
+</li>
+<li>
+<p>At the <code>end_timestamp</code>, your API should:</p>
+<ul>
+<li>Attempt to restore the original value</li>
+<li>If successful, update the status to <code>OLD_VALUE_RESTORED</code></li>
+<li>If it fails, update the status to <code>FAILED</code></li>
+</ul>
+</li>
 </ol>
-<h2 id="need-help">Need Help?<a class="headerlink" href="#need-help" title="Permanent link">¶</a></h2>
-<p>If you have questions or need assistance, contact our integration support team: <a href="mailto:integration-support@tilt-energy.com">integration-support@tilt-energy.com</a></p>
-<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">¶</a></h2>
-<p>We welcome contributions to improve this documentation. Please see our <a href="contributing/">Contributing Guidelines</a> for detailed information on how to contribute. </p>
+<h2 id="status-monitoring">Status Monitoring<a class="headerlink" href="#status-monitoring" title="Permanent link">¶</a></h2>
+<p>Tilt will monitor the status of write actions using the GET <code>/write_actions</code> endpoint. Your API should:</p>
+<ul>
+<li>Return the current status of each action</li>
+<li>Allow filtering by various parameters (device_id, field_name, etc.)</li>
+<li>Provide accurate status updates reflecting the actual state of the device</li>
+</ul>
+<h2 id="example-implementation">Example Implementation<a class="headerlink" href="#example-implementation" title="Permanent link">¶</a></h2>
+<p>Here's how the status might change over time for a write action:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Initial POST response from your API</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">"action_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123e4567-e89b-12d3-a456-426614174000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLANNED"</span>
+<span class="p">}</span>
+
+<span class="c1">// GET response after start_timestamp</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">"action_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123e4567-e89b-12d3-a456-426614174000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NEW_VALUE_SET"</span>
+<span class="p">}</span>
+
+<span class="c1">// GET response after end_timestamp</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">"action_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123e4567-e89b-12d3-a456-426614174000"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OLD_VALUE_RESTORED"</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">¶</a></h2>
+<p>Your API should:</p>
+<ul>
+<li>Validate all timestamps and values before accepting an action</li>
+<li>Handle device communication failures gracefully</li>
+<li>Provide clear error messages when actions fail</li>
+<li>Maintain the original device state if an action fails</li>
+<li>Support retry mechanisms for failed actions </li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -396,8 +499,8 @@
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "search.share", "toc.integrate"], "search": "assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="assets/javascripts/bundle.c8b220af.min.js"></script>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.suggest", "search.share", "toc.integrate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
 <script>document$.subscribe(() => {
             const dark_scheme_name = "slate"
