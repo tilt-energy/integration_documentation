@@ -4,9 +4,9 @@ This documentation is designed to help third-party developers integrate their Bu
 
 ## Quick Start
 
-1. [Core Concepts](concepts/terminology.md) - Understand Tilt's terminology
+1. [Integration Journey](integration/overview.md) - Discover our integration process
 2. [API Specification](api/overview.md) - Learn about our API requirements
-3. [Validation](api/validation.md) - A test suite to validate your API readiness for integration
+
 
 ## Need Help?
 

@@ -38,8 +38,6 @@ plugins:
 
 nav:
   - Home: index.md
-  - Core Concepts:
-    - Terminology: concepts/terminology.md
   - Integration Journey:
     - Overview: integration/overview.md
     - Discovery: integration/discovery.md
@@ -48,7 +46,7 @@ nav:
     - Tilt Integration: integration/tilt_integration.md
     - Production Deployment: integration/production.md
     - Monitoring & Maintenance: integration/monitoring.md
-  - API Reference:
+  - API Specification:
     - Overview: api/overview.md
     - Reference: api/reference.md
     - Authentication: api/authentication.md
