@@ -105,17 +105,18 @@ components:
           type: string
           enum: [CONNECTED, DISCONNECTED, NOT_AVAILABLE, RETIRED]
           description: Current status of the device
-        fields:
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/DeviceField'
-          description: List of fields available for this device
+            type: string
+          description: List of tags associated with the device
+          example: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
       required:
         - device_id
         - site_id
         - device_type
         - status
-        - fields
+        - tags
     PaginatedSites:
       type: object
       properties:
@@ -179,27 +180,12 @@ components:
               site_id: "550e8400-e29b-41d4-a716-446655440000"
               device_type: "HEAT-PUMP"
               status: "CONNECTED"
-              fields:
-                - field_name: "HEATING-MODE"
-                  data_type: "string"
-                  writable: true
-                - field_name: "TARGET-TEMPERATURE"
-                  data_type: "number"
-                  writable: true
-                - field_name: "FEEDBACK-TEMPERATURE"
-                  data_type: "number"
-                  writable: false
+              tags: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
             - device_id: "550e8400-e29b-41d4-a716-446655440001"
               site_id: "550e8400-e29b-41d4-a716-446655440000"
               device_type: "TEMPERATURE-SENSOR"
               status: "CONNECTED"
-              fields:
-                - field_name: "MEAN-TEMPERATURE"
-                  data_type: "number"
-                  writable: false
-                - field_name: "LOWEST-TEMPERATURE"
-                  data_type: "number"
-                  writable: false
+              tags: ["1ST_FLOOR_OFFICES"]
       required:
         - count
         - results
@@ -512,6 +498,124 @@ components:
         - thoroughfare
         - premise_number
         - postal_code
+    DeviceType:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the device type
+          example: "HVAC"
+        description:
+          type: string
+          description: Description of the device type
+          example: "Heating, Ventilation, and Air Conditioning system"
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+          description: List of fields available for this device type
+      required:
+        - name
+        - description
+        - fields
+    Field:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the field
+          example: "HEATING-MODE"
+        description:
+          type: string
+          description: Description of the field
+          example: "Current heating mode of the device"
+        type:
+          type: string
+          enum: [string, number, boolean]
+          description: Data type of the field
+          example: "string"
+        unit:
+          type: string
+          description: Unit of measurement for numeric fields
+          example: "°C"
+        min:
+          type: number
+          description: Minimum value for numeric fields
+          example: 5
+        max:
+          type: number
+          description: Maximum value for numeric fields
+          example: 30
+        values:
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: Possible value for the field
+                example: "COMFORT"
+              description:
+                type: string
+                description: Description of the value
+                example: "Standard comfort heating mode"
+          description: List of possible values for string fields
+      required:
+        - name
+        - description
+        - type
+    PaginatedDeviceTypes:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of device types
+          example: 2
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: "https://your-base-url.com/v1/device_types?page=2&page_size=100"
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceType'
+          example:
+            - name: "HVAC"
+              description: "Heating, Ventilation, and Air Conditioning system"
+              fields:
+                - name: "HEATING-MODE"
+                  description: "Current heating mode of the device"
+                  type: "string"
+                  values:
+                    - value: "COMFORT"
+                      description: "Standard comfort heating mode"
+                    - value: "ECO"
+                      description: "Energy-saving heating mode"
+                    - value: "FROST_PROTECTION"
+                      description: "Minimum heating to prevent freezing"
+                - name: "TARGET-TEMPERATURE"
+                  description: "Desired temperature setpoint"
+                  type: "number"
+                  unit: "°C"
+                  min: 5
+                  max: 30
+            - name: "THERMOSTAT"
+              description: "Smart thermostat device"
+              fields:
+                - name: "TARGET-TEMPERATURE"
+                  description: "Desired temperature setpoint"
+                  type: "number"
+                  unit: "°C"
+                  min: 5
+                  max: 30
+                - name: "FEEDBACK-TEMPERATURE"
+                  description: "Current measured temperature"
+                  type: "number"
+                  unit: "°C"
+      required:
+        - count
+        - results
 
 paths:
   /oauth/token:
@@ -627,6 +731,68 @@ paths:
                 $ref: '#/components/schemas/Error'
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /device_types:
+    get:
+      summary: List device types
+      description: Retrieve a list of all device types with their fields
+      operationId: listDeviceTypes
+      security:
+        - OAuth2: [devices:read]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceType'
+                example:
+                  - name: "HVAC"
+                    description: "Heating, Ventilation, and Air Conditioning system"
+                    fields:
+                      - name: "HEATING-MODE"
+                        description: "Current heating mode of the device"
+                        type: "string"
+                        values:
+                          - value: "COMFORT"
+                            description: "Standard comfort heating mode"
+                          - value: "ECO"
+                            description: "Energy-saving heating mode"
+                          - value: "FROST_PROTECTION"
+                            description: "Minimum heating to prevent freezing"
+                      - name: "TARGET-TEMPERATURE"
+                        description: "Desired temperature setpoint"
+                        type: "number"
+                        unit: "°C"
+                        min: 5
+                        max: 30
+                  - name: "THERMOSTAT"
+                    description: "Smart thermostat device"
+                    fields:
+                      - name: "TARGET-TEMPERATURE"
+                        description: "Desired temperature setpoint"
+                        type: "number"
+                        unit: "°C"
+                        min: 5
+                        max: 30
+                      - name: "FEEDBACK-TEMPERATURE"
+                        description: "Current measured temperature"
+                        type: "number"
+                        unit: "°C"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
           content:
             application/json:
               schema:

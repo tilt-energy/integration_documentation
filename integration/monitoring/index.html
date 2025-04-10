@@ -7,12 +7,12 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="Documentation for third-party developers integrating with Tilt" name="description"/>
 <meta content="Tilt Team" name="author"/>
-<link href="https://tilt-energy.github.io/integration-documentation/api/reference/" rel="canonical"/>
-<link href="../overview/" rel="prev"/>
-<link href="../authentication/" rel="next"/>
+<link href="https://tilt-energy.github.io/integration-documentation/integration/monitoring/" rel="canonical"/>
+<link href="../production/" rel="prev"/>
+<link href="../../api/overview/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.11" name="generator"/>
-<title>Reference - Tilt Integration Documentation</title>
+<title>Monitoring &amp; Maintenance - Tilt Integration Documentation</title>
 <link href="../../assets/stylesheets/main.4af4bdda.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -25,7 +25,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#api-reference">
+<a class="md-skip" href="#monitoring-maintenance-phase">
           Skip to content
         </a>
 </div>
@@ -49,7 +49,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Reference
+              Monitoring &amp; Maintenance
             
           </span>
 </div>
@@ -127,8 +127,8 @@
 
       </a>
 </li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../integration/overview/">
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../overview/">
           
   
   
@@ -136,8 +136,8 @@
 
         </a>
 </li>
-<li class="md-tabs__item md-tabs__item--active">
-<a class="md-tabs__link" href="../overview/">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../api/overview/">
           
   
   
@@ -179,93 +179,19 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
 <span class="md-ellipsis">
     Integration Journey
     
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_2">
 <span class="md-nav__icon md-icon"></span>
             Integration Journey
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/overview/">
-<span class="md-ellipsis">
-    Overview
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/discovery/">
-<span class="md-ellipsis">
-    Discovery
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/implementation/">
-<span class="md-ellipsis">
-    API Implementation
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/validation/">
-<span class="md-ellipsis">
-    Validation
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/tilt_integration/">
-<span class="md-ellipsis">
-    Tilt Integration
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/production/">
-<span class="md-ellipsis">
-    Production Deployment
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../integration/monitoring/">
-<span class="md-ellipsis">
-    Monitoring &amp; Maintenance
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-<span class="md-ellipsis">
-    API Specification
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="true" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_3">
-<span class="md-nav__icon md-icon"></span>
-            API Specification
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
@@ -276,9 +202,105 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../discovery/">
+<span class="md-ellipsis">
+    Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../implementation/">
+<span class="md-ellipsis">
+    API Implementation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../validation/">
+<span class="md-ellipsis">
+    Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../tilt_integration/">
+<span class="md-ellipsis">
+    Tilt Integration
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../production/">
+<span class="md-ellipsis">
+    Production Deployment
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--active">
 <input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    Monitoring &amp; Maintenance
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
 <a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    Monitoring &amp; Maintenance
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-to-expect">
+<span class="md-ellipsis">
+      What to Expect
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    API Specification
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            API Specification
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/overview/">
+<span class="md-ellipsis">
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../api/reference/">
 <span class="md-ellipsis">
     Reference
     
@@ -286,7 +308,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../authentication/">
+<a class="md-nav__link" href="../../api/authentication/">
 <span class="md-ellipsis">
     Authentication
     
@@ -294,7 +316,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../action_scheduling/">
+<a class="md-nav__link" href="../../api/action_scheduling/">
 <span class="md-ellipsis">
     Action Scheduling
     
@@ -302,7 +324,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../documentation/">
+<a class="md-nav__link" href="../../api/documentation/">
 <span class="md-ellipsis">
     Document your system
     
@@ -319,54 +341,40 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">¶</a></h1>
-<p>This page provides the OpenAPI specification that your API must implement to integrate with Tilt's platform.</p>
-<p>You can:</p>
+<h1 id="monitoring-maintenance-phase">Monitoring &amp; Maintenance Phase<a class="headerlink" href="#monitoring-maintenance-phase" title="Permanent link">¶</a></h1>
+<p>The monitoring and maintenance phase ensures the ongoing health and performance of your integration with Tilt's platform. We keep in touch !</p>
+<h2 id="what-to-expect">What to Expect<a class="headerlink" href="#what-to-expect" title="Permanent link">¶</a></h2>
+<p>Both sides are engaged for a successfull long term maintenance, which entails :</p>
+<ol>
+<li>
+<p>Ongoing Monitoring:</p>
 <ul>
-<li>Review the required endpoints and their specifications</li>
-<li>Understand the expected request/response schemas</li>
-<li>Download the OpenAPI specification using the download button</li>
+<li>System performance tracking, including SLAs</li>
+<li>Error rate monitoring</li>
+<li>Response time analysis</li>
+<li>Resource utilization</li>
 </ul>
-<p><iframe class="redoc-iframe" frameborder="0" id="fd0c2150" src="redoc-fd0c2150.html" style="overflow:hidden;width:100%;height:80vh;" width="100%"></iframe></p>
-<script>
-  // Wait for the page to load
-  window.addEventListener('load', function() {
-    // Initialize ReDoc
-    Redoc.init('openapi.yaml', {
-      scrollYOffset: 60,
-      hideDownloadButton: false,
-      expandResponses: "200,201",
-      requiredPropsFirst: true,
-      noAutoAuth: true,
-      pathInMiddlePanel: true,
-      hideLoading: true,
-      nativeScrollbars: true,
-      suppressWarnings: true,
-      theme: {
-        colors: {
-          primary: {
-            main: '#3f51b5'
-          }
-        },
-        typography: {
-          fontSize: '16px',
-          lineHeight: '1.5',
-          fontFamily: 'Roboto, sans-serif'
-        },
-        sidebar: {
-          width: '260px',
-          backgroundColor: '#f5f5f5'
-        }
-      }
-    }, document.getElementById('redoc-container'));
-  });
-</script>
-<style>
-  #redoc-container {
-    min-height: 100vh;
-    width: 100%;
-  }
-</style>
+</li>
+<li>
+<p>Regular Maintenance:</p>
+<ul>
+<li>Security updates</li>
+<li>Performance optimizations</li>
+<li>Bug fixes</li>
+<li>Feature enhancements</li>
+</ul>
+</li>
+<li>
+<p>Support and Communication:</p>
+<ul>
+<li>Regular status updates</li>
+<li>Issue reporting and resolution</li>
+<li>Performance reviews</li>
+<li>Future planning</li>
+</ul>
+</li>
+</ol>
+<p>Want to learn more about our API? Check out the <a href="../../api/overview/">API Overview</a> for detailed information about our endpoints and features.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

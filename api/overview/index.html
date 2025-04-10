@@ -8,7 +8,7 @@
 <meta content="Documentation for third-party developers integrating with Tilt" name="description"/>
 <meta content="Tilt Team" name="author"/>
 <link href="https://tilt-energy.github.io/integration-documentation/api/overview/" rel="canonical"/>
-<link href="../../concepts/terminology/" rel="prev"/>
+<link href="../../integration/monitoring/" rel="prev"/>
 <link href="../reference/" rel="next"/>
 <link href="../../assets/images/favicon.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.6.11" name="generator"/>
@@ -118,19 +118,21 @@
 <ul class="md-tabs__list">
 <li class="md-tabs__item">
 <a class="md-tabs__link" href="../..">
-          
+        
   
   
-  Introduction
+    
+  
+  Home
 
-        </a>
+      </a>
 </li>
 <li class="md-tabs__item">
-<a class="md-tabs__link" href="../../concepts/terminology/">
+<a class="md-tabs__link" href="../../integration/overview/">
           
   
   
-  Core Concepts
+  Integration Journey
 
         </a>
 </li>
@@ -140,15 +142,6 @@
   
   
   API Specification
-
-        </a>
-</li>
-<li class="md-tabs__item">
-<a class="md-tabs__link" href="../../contributing/">
-          
-  
-  
-  Contributing
 
         </a>
 </li>
@@ -178,37 +171,19 @@
 </a>
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
-<span class="md-ellipsis">
-    Introduction
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_1_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_1">
-<span class="md-nav__icon md-icon"></span>
-            Introduction
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
 <a class="md-nav__link" href="../..">
 <span class="md-ellipsis">
-    Overview
+    Home
     
   </span>
 </a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_2" type="checkbox"/>
 <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
 <span class="md-ellipsis">
-    Core Concepts
+    Integration Journey
     
   </span>
 <span class="md-nav__icon md-icon"></span>
@@ -216,13 +191,61 @@
 <nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_2">
 <span class="md-nav__icon md-icon"></span>
-            Core Concepts
+            Integration Journey
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../concepts/terminology/">
+<a class="md-nav__link" href="../../integration/overview/">
 <span class="md-ellipsis">
-    Terminology
+    Overview
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/discovery/">
+<span class="md-ellipsis">
+    Discovery
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/implementation/">
+<span class="md-ellipsis">
+    API Implementation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/validation/">
+<span class="md-ellipsis">
+    Validation
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/tilt_integration/">
+<span class="md-ellipsis">
+    Tilt Integration
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/production/">
+<span class="md-ellipsis">
+    Production Deployment
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../integration/monitoring/">
+<span class="md-ellipsis">
+    Monitoring &amp; Maintenance
     
   </span>
 </a>
@@ -267,16 +290,9 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#authentication">
+<a class="md-nav__link" href="#need-help">
 <span class="md-ellipsis">
-      Authentication
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#documentation">
-<span class="md-ellipsis">
-      Documentation
+      Need Help?
     </span>
 </a>
 </li>
@@ -308,35 +324,9 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../validation/">
+<a class="md-nav__link" href="../documentation/">
 <span class="md-ellipsis">
-    Validation
-    
-  </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle md-toggle--indeterminate" id="__nav_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-<span class="md-ellipsis">
-    Contributing
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
-<label class="md-nav__title" for="__nav_4">
-<span class="md-nav__icon md-icon"></span>
-            Contributing
-          </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../contributing/">
-<span class="md-ellipsis">
-    Contributing
+    Document your system
     
   </span>
 </a>
@@ -353,16 +343,15 @@
 <article class="md-content__inner md-typeset">
 <h1 id="api-overview">API Overview<a class="headerlink" href="#api-overview" title="Permanent link">¶</a></h1>
 <p>This section describes the API specification that your system must implement to integrate with Tilt's platform. Your API must conform to this specification to ensure successful integration.</p>
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h2>
-<p>All API requests must be authenticated using OAuth2. For detailed information about authentication and secure secret sharing, please see our <a href="../authentication/">Authentication Guide</a>.</p>
-<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">¶</a></h2>
-<p>For detailed API specification, including:</p>
-<ul>
-<li>Required endpoints and their specifications</li>
-<li>Expected request/response schemas</li>
-<li>Authentication requirements</li>
-</ul>
-<p>Please visit our <a href="../reference/">API Reference</a> page. </p>
+<p>To begin implementing your API integration:</p>
+<ol>
+<li>Review the <a href="../reference/">API Reference</a> to understand the required endpoints</li>
+<li>Set up <a href="../authentication/">Authentication</a> following our OAuth2 implementation guide</li>
+<li>Get into the details of <a href="../action_scheduling/">Action Scheduling</a> for handling device operations</li>
+<li>Document how we should control your devices and what errors we should expect, according to our <a href="../documentation/">Documentation Requirements</a></li>
+</ol>
+<h2 id="need-help">Need Help?<a class="headerlink" href="#need-help" title="Permanent link">¶</a></h2>
+<p>If you have questions about implementing any part of the API specification, please contact our integration support team at <a href="mailto:integration-support@tilt-energy.com">integration-support@tilt-energy.com</a>. </p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
