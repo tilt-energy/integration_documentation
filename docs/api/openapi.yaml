@@ -70,23 +70,6 @@ components:
         - id
         - name
         - address
-    DeviceField:
-      type: object
-      properties:
-        field_name:
-          type: string
-          description: Name of the field
-        data_type:
-          type: string
-          enum: [string, number, boolean, datetime]
-          description: Data type of the field
-        writable:
-          type: boolean
-          description: Whether the field can be written to
-      required:
-        - field_name
-        - data_type
-        - writable
     Device:
       type: object
       properties:
@@ -110,7 +93,7 @@ components:
           items:
             type: string
           description: List of tags associated with the device
-          example: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
+          example: ["2ND_FLOOR_OFFICES", "HITASHI"]
       required:
         - device_id
         - site_id
@@ -180,7 +163,7 @@ components:
               site_id: "550e8400-e29b-41d4-a716-446655440000"
               device_type: "HEAT-PUMP"
               status: "CONNECTED"
-              tags: ["2ND_FLOOR_OFFICES", "NO_FLEX"]
+              tags: ["2ND_FLOOR_OFFICES", "HITASHI"]
             - device_id: "550e8400-e29b-41d4-a716-446655440001"
               site_id: "550e8400-e29b-41d4-a716-446655440000"
               device_type: "TEMPERATURE-SENSOR"
@@ -396,6 +379,10 @@ components:
               field_name: "HEATING-MODE"
               value: "COMFORT"
               timestamp: "2024-04-07T10:00:00Z"
+            - device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "MEAN-POWER-CONSUMPTION"
+              value: 2500
+              timestamp: "2024-04-08T10:00:00Z"
       required:
         - count
         - results
@@ -440,7 +427,7 @@ components:
           type: string
           format: uri
           description: URL for the next page of results
-          example: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE"
+          example: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE,MEAN-POWER-CONSUMPTION"
         results:
           type: array
           items:
@@ -452,7 +439,7 @@ components:
         - results
       example:
         count: 11200
-        next: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE"
+        next: "https://your-base-url.com/v1/history?page=2&page_size=100&device_id=550e8400-e29b-41d4-a716-446655440000&field_name=TARGET-TEMPERATURE,MEAN-POWER-CONSUMPTION"
         results:
           - device_id: "550e8400-e29b-41d4-a716-446655440000"
             field_name: "TARGET-TEMPERATURE"
@@ -460,6 +447,12 @@ components:
               - ["2024-03-08T07:00:00Z", 22]
               - ["2024-04-08T08:00:00Z", 17]
               - ["2024-04-08T09:00:00Z", 22]
+          - device_id: "550e8400-e29b-41d4-a716-446655440000"
+            field_name: "MEAN-POWER-CONSUMPTION"
+            values:
+              - ["2024-03-08T07:00:00Z", 2500]
+              - ["2024-04-08T08:00:00Z", 1800]
+              - ["2024-04-08T09:00:00Z", 2200]
     Address:
       type: object
       description: Address conforming to ISO 19160-4:2017 Geographic information — Addressing
@@ -504,11 +497,9 @@ components:
         name:
           type: string
           description: Name of the device type
-          example: "HVAC"
         description:
           type: string
           description: Description of the device type
-          example: "Heating, Ventilation, and Air Conditioning system"
         fields:
           type: array
           items:
@@ -518,6 +509,38 @@ components:
         - name
         - description
         - fields
+      example:
+        name: "HVAC"
+        description: "Heating, Ventilation, and Air Conditioning system"
+        fields:
+          - name: "HEATING-MODE"
+            description: "Current heating mode of the device"
+            data_type: "string"
+            writable: true
+            values:
+              - value: "COMFORT"
+                description: "Standard comfort heating mode"
+              - value: "ECO"
+                description: "Energy-saving heating mode"
+              - value: "FROST_PROTECTION"
+                description: "Minimum heating to prevent freezing"
+          - name: "TARGET-TEMPERATURE"
+            description: "Desired temperature setpoint"
+            data_type: "number"
+            writable: true
+            unit: "°C"
+            min: 5
+            max: 30
+          - name: "FEEDBACK-TEMPERATURE"
+            description: "Current measured temperature"
+            data_type: "number"
+            writable: false
+            unit: "°C"
+          - name: "MEAN-POWER-CONSUMPTION"
+            description: "Average power consumption in latest 5 minutes"
+            data_type: "number"
+            writable: false
+            unit: "W"
     Field:
       type: object
       properties:
@@ -529,11 +552,14 @@ components:
           type: string
           description: Description of the field
           example: "Current heating mode of the device"
-        type:
+        data_type:
           type: string
           enum: [string, number, boolean]
           description: Data type of the field
           example: "string"
+        writable:
+          type: boolean
+          description: Whether the field can be written to
         unit:
           type: string
           description: Unit of measurement for numeric fields
@@ -563,59 +589,184 @@ components:
       required:
         - name
         - description
-        - type
-    PaginatedDeviceTypes:
+        - data_type
+        - writable
+    SyncWriteAction:
       type: object
       properties:
-        count:
-          type: integer
-          description: Total number of device types
-          example: 2
-        next:
+        action_id:
           type: string
-          format: uri
-          description: URL for the next page of results
-          example: "https://your-base-url.com/v1/device_types?page=2&page_size=100"
+          format: uuid
+          description: Unique identifier for the write action
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device to write to
+        field_name:
+          type: string
+          description: Name of the field to write
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: Value to write to the field
+      required:
+        - action_id
+        - device_id
+        - field_name
+        - value
+    SyncWriteActionResult:
+      type: object
+      properties:
+        action_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the write action
+        device_id:
+          type: string
+          format: uuid
+          description: ID of the device to write to
+        field_name:
+          type: string
+          description: Name of the field to write
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: Value to write to the field
+        status:
+          type: string
+          enum: [NEW_VALUE_SET, FAILED]
+          description: Status of the write action
+        error:
+          type: object
+          properties:
+            error_key:
+              type: string
+              description: Machine-readable error code
+              example: "timeout"
+            error_message:
+              type: string
+              description: Human-readable error message
+              example: "Device did not respond within timeout period"
+            error_details:
+              type: object
+              description: Additional error details
+              example:
+                timeout_ms: 5000
+                reason: "device_unresponsive"
+          required:
+            - error_key
+      required:
+        - action_id
+        - device_id
+        - field_name
+        - value
+        - status
+    SyncWriteActionsRequest:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SyncWriteAction'
+          description: List of synchronous write actions to execute
+          example:
+            - action_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "TARGET-TEMPERATURE"
+              value: 17
+            - action_id: "550e8400-e29b-41d4-a716-446655440001"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "HEATING-MODE"
+              value: "ECO"
+      required:
+        - actions
+    SyncWriteActionsResponse:
+      type: object
+      properties:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/DeviceType'
+            $ref: '#/components/schemas/SyncWriteActionResult'
+          description: List of synchronous write actions results
           example:
-            - name: "HVAC"
-              description: "Heating, Ventilation, and Air Conditioning system"
-              fields:
-                - name: "HEATING-MODE"
-                  description: "Current heating mode of the device"
-                  type: "string"
-                  values:
-                    - value: "COMFORT"
-                      description: "Standard comfort heating mode"
-                    - value: "ECO"
-                      description: "Energy-saving heating mode"
-                    - value: "FROST_PROTECTION"
-                      description: "Minimum heating to prevent freezing"
-                - name: "TARGET-TEMPERATURE"
-                  description: "Desired temperature setpoint"
-                  type: "number"
-                  unit: "°C"
-                  min: 5
-                  max: 30
-            - name: "THERMOSTAT"
-              description: "Smart thermostat device"
-              fields:
-                - name: "TARGET-TEMPERATURE"
-                  description: "Desired temperature setpoint"
-                  type: "number"
-                  unit: "°C"
-                  min: 5
-                  max: 30
-                - name: "FEEDBACK-TEMPERATURE"
-                  description: "Current measured temperature"
-                  type: "number"
-                  unit: "°C"
+            - action_id: "550e8400-e29b-41d4-a716-446655440000"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "TARGET-TEMPERATURE"
+              value: 17
+              status: "NEW_VALUE_SET"
+            - action_id: "550e8400-e29b-41d4-a716-446655440001"
+              device_id: "550e8400-e29b-41d4-a716-446655440000"
+              field_name: "HEATING-MODE"
+              value: "ECO"
+              status: "FAILED"
+              error:
+                error_key: "timeout"
+                error_message: "Device did not respond within timeout period"
+                error_details:
+                  timeout_ms: 5000
+                  reason: "device_unresponsive"
       required:
-        - count
         - results
+    CancelWriteActionsRequest:
+      type: object
+      properties:
+        action_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: List of action IDs to cancel
+          example: ["550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440001"]
+      required:
+        - action_ids
+    CancelWriteActionError:
+      type: object
+      properties:
+        action_id:
+          type: string
+          format: uuid
+          description: ID of the action that failed to be canceled
+        error_key:
+          type: string
+          description: Machine-readable error code
+          example: "action_not_found"
+        error_message:
+          type: string
+          description: Human-readable error message
+          example: "Action not found"
+        error_details:
+          type: object
+          description: Additional error details
+          example:
+            reason: "action_already_executed"
+      required:
+        - action_id
+        - error_key
+    CancelWriteActionsResponse:
+      type: object
+      properties:
+        canceled_count:
+          type: integer
+          description: Number of successfully canceled actions
+          example: 1
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/CancelWriteActionError'
+          description: List of errors encountered while canceling actions
+          example:
+            - action_id: "550e8400-e29b-41d4-a716-446655440001"
+              error_key: "action_not_found"
+              error_message: "Action not found"
+              error_details:
+                reason: "action_already_executed"
+      required:
+        - canceled_count
+        - errors
 
 paths:
   /oauth/token:
@@ -758,7 +909,8 @@ paths:
                     fields:
                       - name: "HEATING-MODE"
                         description: "Current heating mode of the device"
-                        type: "string"
+                        data_type: "string"
+                        writable: true
                         values:
                           - value: "COMFORT"
                             description: "Standard comfort heating mode"
@@ -768,23 +920,32 @@ paths:
                             description: "Minimum heating to prevent freezing"
                       - name: "TARGET-TEMPERATURE"
                         description: "Desired temperature setpoint"
-                        type: "number"
-                        unit: "°C"
-                        min: 5
-                        max: 30
-                  - name: "THERMOSTAT"
-                    description: "Smart thermostat device"
-                    fields:
-                      - name: "TARGET-TEMPERATURE"
-                        description: "Desired temperature setpoint"
-                        type: "number"
+                        data_type: "number"
+                        writable: true
                         unit: "°C"
                         min: 5
                         max: 30
                       - name: "FEEDBACK-TEMPERATURE"
                         description: "Current measured temperature"
-                        type: "number"
+                        data_type: "number"
+                        writable: false
                         unit: "°C"
+                      - name: "MEAN-POWER-CONSUMPTION"
+                        description: "Average power consumption"
+                        data_type: "number"
+                        writable: false
+                        unit: "W"
+                  - name: "THERMOSTAT"
+                    description: "Smart thermostat device"
+                    fields:
+                      - name: "TARGET-TEMPERATURE"
+                        description: "Desired temperature setpoint"
+                        data_type: "number"
+                        writable: false
+                        unit: "°C"
+                        min: 5
+                        max: 30
+
         '401':
           description: Unauthorized
           content:
@@ -866,7 +1027,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
   /write_actions:
-    post:
+    put:
       summary: Execute write actions
       description: Execute a batch of write actions on devices
       operationId: writeActions
@@ -1048,6 +1209,99 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /write_actions/cancel:
+    put:
+      summary: Cancel write actions
+      description: Cancel a list of write actions that are in PLANNED state
+      operationId: cancelWriteActions
+      security:
+        - OAuth2: [values:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelWriteActionsRequest'
+      responses:
+        '200':
+          description: Write actions canceled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelWriteActionsResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error' 
+                
+  /synchronous_write_actions:
+    post:
+      summary: Execute synchronous write actions
+      description: |
+        Execute a batch of write actions on devices synchronously. This endpoint is an alternative to the asynchronous POST /write_actions endpoint,
+        where the scheduling is delegated to Tilt client. The API must wait for the actual devices to execute the actions (or fail to execute them) before returning a response.
+        It should therefore implement a sensible global timeout mechanism.
+      operationId: synchronousWriteActions
+      security:
+        - OAuth2: [values:write]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncWriteActionsRequest'
+      responses:
+        '200':
+          description: Write actions executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncWriteActionsResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /latest_value:
     get:
       summary: Get latest values for devices and fields
@@ -1209,4 +1463,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error' 
+                $ref: '#/components/schemas/Error'

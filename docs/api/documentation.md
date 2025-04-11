@@ -8,7 +8,7 @@ This page outlines the essential documentation you need to provide about your AP
 Document all device types that your system supports and how we should control them, as well
 as the device tags.
 
-Ex : An HVAC should be stopped by writing HEATING-MODE to FROST-PROTECTION. If it has a tag "NO_FLEX", it should not be part of any flex management.
+Ex : An HVAC should be stopped by writing HEATING-MODE to FROST-PROTECTION, unless it has a tag "HITASHI", in which case its TEMPERATURE-TARGET should be set to 16°C.
 
 ### 2. Error Cases
 Document all foreseeable error scenarii:
