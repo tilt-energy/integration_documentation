@@ -378,7 +378,7 @@
 <h3 id="1-device-types-tags">1. Device Types &amp; tags<a class="headerlink" href="#1-device-types-tags" title="Permanent link">¶</a></h3>
 <p>Document all device types that your system supports and how we should control them, as well
 as the device tags.</p>
-<p>Ex : An HVAC should be stopped by writing HEATING-MODE to FROST-PROTECTION. If it has a tag "NO_FLEX", it should not be part of any flex management.</p>
+<p>Ex : An HVAC should be stopped by writing HEATING-MODE to FROST-PROTECTION, unless it has a tag "HITASHI", in which case its TEMPERATURE-TARGET should be set to 16°C.</p>
 <h3 id="2-error-cases">2. Error Cases<a class="headerlink" href="#2-error-cases" title="Permanent link">¶</a></h3>
 <p>Document all foreseeable error scenarii:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">errors</span><span class="p">:</span>
